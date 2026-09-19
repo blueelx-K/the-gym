@@ -1,6 +1,6 @@
 // 정적 자산을 캐싱해 오프라인에서도 앱이 동작하도록 하는 서비스 워커
 // 파일을 하나라도 추가/수정하면 CACHE_NAME 버전을 올려야 새 캐시로 교체된다.
-const CACHE_NAME = 'the-gym-cache-v3';
+const CACHE_NAME = 'the-gym-cache-v4';
 
 const APP_SHELL = [
   './',

@@ -21,6 +21,24 @@ const DEFAULT_EXERCISES = [
   { name: '플랭크', category: '코어', location: 'home', unit: 'time' },
   { name: '런지', category: '하체', location: 'both', unit: 'bodyweight' },
   { name: '버피', category: '유산소', location: 'home', unit: 'bodyweight' },
+  // 사용자 헬스장 기구 목록
+  { name: '레터럴 레이즈 머신', category: '어깨', location: 'gym', unit: 'weight' },
+  { name: '로우로우 머신', category: '등', location: 'gym', unit: 'weight' },
+  { name: '레그컬', category: '하체', location: 'gym', unit: 'weight' },
+  { name: '레그 익스텐션', category: '하체', location: 'gym', unit: 'weight' },
+  { name: '레그프레스', category: '하체', location: 'gym', unit: 'weight' },
+  { name: '이너타이(어덕터) 머신', category: '하체', location: 'gym', unit: 'weight' },
+  { name: '체스트프레스 머신', category: '가슴', location: 'gym', unit: 'weight' },
+  { name: '복근 머신', category: '코어', location: 'gym', unit: 'weight' },
+  { name: '친업 어시스트 머신', category: '등', location: 'gym', unit: 'weight' },
+  { name: '딥스 어시스트 머신', category: '가슴', location: 'gym', unit: 'weight' },
+  { name: '덤벨', category: '프리웨이트', location: 'gym', unit: 'weight' },
+  { name: '트레드밀', category: '유산소', location: 'gym', unit: 'time' },
+  { name: '사이클', category: '유산소', location: 'gym', unit: 'time' },
+  { name: 'SONIX (음파운동기)', category: '회복', location: 'gym', unit: 'time' },
+  { name: '천국의계단', category: '유산소', location: 'gym', unit: 'time' },
+  { name: '케이블 머신', category: '전신', location: 'gym', unit: 'weight' },
+  { name: '스미스 머신', category: '복합', location: 'gym', unit: 'weight' },
 ];
 
 let filterLocation = 'all';
@@ -46,10 +64,13 @@ function normalizeUrl(raw) {
   return `https://${trimmed}`;
 }
 
-async function seedExercisesIfEmpty() {
+// 기본 종목 중 이름이 아직 없는 것만 채워 넣는다.
+// (완전히 빈 경우뿐 아니라, 이미 쓰던 라이브러리에 새 기본 종목이 추가된 경우에도 자동으로 보충된다.)
+async function seedMissingDefaultExercises() {
   const existing = await dbGetAll('exercises');
-  if (existing.length > 0) return;
-  for (const seed of DEFAULT_EXERCISES) {
+  const existingNames = new Set(existing.map((e) => e.name));
+  const missing = DEFAULT_EXERCISES.filter((seed) => !existingNames.has(seed.name));
+  for (const seed of missing) {
     await dbAdd('exercises', {
       id: generateId(),
       ...seed,
@@ -61,7 +82,7 @@ async function seedExercisesIfEmpty() {
 }
 
 export async function renderExercisesView(container) {
-  await seedExercisesIfEmpty();
+  await seedMissingDefaultExercises();
   await paint(container);
 }
 
