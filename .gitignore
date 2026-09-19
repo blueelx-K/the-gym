@@ -1,0 +1,6 @@
+# PWABuilder Android 패키지 — 서명 키(signing.keystore)와 비밀번호가 들어있어 절대 커밋하지 않는다.
+# 안전한 곳(예: 비밀번호 관리자, 암호화된 백업)에 별도로 보관해야 한다.
+android-package/
+
+# Claude Code 로컬 설정
+.claude/
