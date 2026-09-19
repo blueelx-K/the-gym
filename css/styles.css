@@ -169,6 +169,11 @@ a.btn {
   flex-wrap: wrap;
 }
 
+.toolbar-actions {
+  display: flex;
+  gap: 8px;
+}
+
 .filter-group {
   display: flex;
   gap: 6px;

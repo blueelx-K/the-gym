@@ -55,7 +55,11 @@ async function paint(container) {
             )
             .join('')}
         </div>
-        <button type="button" class="btn btn-primary" id="btn-new-plan">+ 계획 추가</button>
+        <div class="toolbar-actions">
+          <label class="btn" id="btn-import-plans-label" for="import-plans-file">가져오기</label>
+          <input type="file" id="import-plans-file" accept="application/json" hidden />
+          <button type="button" class="btn btn-primary" id="btn-new-plan">+ 계획 추가</button>
+        </div>
       </div>
 
       ${editingId ? renderForm(exerciseMap) : ''}
@@ -205,6 +209,60 @@ function syncDraftFromForm(form) {
   });
 }
 
+// 계획 가져오기 파일 형식: 종목을 id가 아니라 이름으로 참조한다.
+// (기기마다 종목 id가 다르게 생성되므로, 이름으로 현재 기기의 종목과 매칭해서 연결한다.)
+async function importPlansFromFile(file) {
+  const text = await file.text();
+  let payload;
+  try {
+    payload = JSON.parse(text);
+  } catch {
+    throw new Error('올바른 JSON 파일이 아닙니다.');
+  }
+
+  const planList = Array.isArray(payload) ? payload : payload.plans;
+  if (!Array.isArray(planList) || planList.length === 0) {
+    throw new Error('가져올 계획이 없습니다.');
+  }
+
+  const exercises = await dbGetAll('exercises');
+  const nameToId = new Map(exercises.map((e) => [e.name, e.id]));
+  const unmatched = new Set();
+  let importedCount = 0;
+
+  for (const planDraft of planList) {
+    const exercisesPayload = (planDraft.exercises || [])
+      .map((pe, i) => {
+        const exerciseId = nameToId.get(pe.exerciseName);
+        if (!exerciseId) {
+          unmatched.add(pe.exerciseName);
+          return null;
+        }
+        return {
+          exerciseId,
+          targetSets: Number(pe.targetSets) || 0,
+          targetReps: Number(pe.targetReps) || 0,
+          targetWeight: Number(pe.targetWeight) || 0,
+          restSeconds: Number(pe.restSeconds) || 0,
+          order: i,
+        };
+      })
+      .filter(Boolean);
+
+    await dbAdd('plans', {
+      id: generateId(),
+      name: planDraft.name || '이름 없는 계획',
+      dayOfWeek: planDraft.dayOfWeek || 'none',
+      location: planDraft.location || 'gym',
+      active: planDraft.active !== false,
+      exercises: exercisesPayload,
+    });
+    importedCount += 1;
+  }
+
+  return { importedCount, unmatched: Array.from(unmatched) };
+}
+
 function attachEvents(container) {
   container.querySelectorAll('[data-filter]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -212,6 +270,28 @@ function attachEvents(container) {
       paint(container);
     });
   });
+
+  const importInput = container.querySelector('#import-plans-file');
+  if (importInput) {
+    importInput.addEventListener('change', async () => {
+      const file = importInput.files[0];
+      importInput.value = '';
+      if (!file) return;
+
+      try {
+        const { importedCount, unmatched } = await importPlansFromFile(file);
+        let msg = `계획 ${importedCount}개를 가져왔습니다.`;
+        if (unmatched.length) {
+          msg += `\n\n다음 종목은 라이브러리에서 찾지 못해 제외됐습니다:\n- ${unmatched.join('\n- ')}`;
+        }
+        window.alert(msg);
+        paint(container);
+      } catch (err) {
+        console.error(err);
+        window.alert(err.message || '가져오기에 실패했습니다.');
+      }
+    });
+  }
 
   const newBtn = container.querySelector('#btn-new-plan');
   if (newBtn) {
