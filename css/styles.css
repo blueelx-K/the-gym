@@ -1,0 +1,726 @@
+:root {
+  --bg: #f7f7f8;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #6b6b6b;
+  --accent: #2f6fed;
+  --border: #e5e5e7;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #121214;
+    --surface: #1c1c1f;
+    --text: #f2f2f2;
+    --text-muted: #9a9a9e;
+    --accent: #5b8dff;
+    --border: #2c2c30;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #121214;
+  --surface: #1c1c1f;
+  --text: #f2f2f2;
+  --text-muted: #9a9a9e;
+  --accent: #5b8dff;
+  --border: #2c2c30;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+header.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: env(safe-area-inset-top, 0) 16px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+header.app-header h1 {
+  font-size: 1.1rem;
+  margin: 12px 0 0;
+}
+
+main#app {
+  padding: 16px 16px calc(72px + env(safe-area-inset-bottom, 0px));
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: calc(100vh - 56px);
+}
+
+.view h1 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.placeholder {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.error {
+  color: #d64545;
+}
+
+.loading {
+  color: var(--text-muted);
+}
+
+nav.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 10;
+}
+
+nav.bottom-nav a {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px 6px;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+nav.bottom-nav a .icon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+nav.bottom-nav a.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* --- 공통 컨트롤 --- */
+
+.btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+a.btn {
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-secondary {
+  background: transparent;
+}
+
+.btn-icon {
+  border: none;
+  background: transparent;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+/* --- 툴바 / 필터 --- */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-group {
+  display: flex;
+  gap: 6px;
+}
+
+.filter-btn {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* --- 종목 리스트 --- */
+
+.exercise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exercise-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.exercise-card-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.exercise-card-meta {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 2px;
+}
+
+.exercise-links {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 6px;
+}
+
+.exercise-links a {
+  color: var(--accent);
+  font-size: 0.85rem;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.exercise-notes {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+.exercise-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: #fff;
+}
+
+.badge-gym {
+  background: #d64545;
+}
+
+.badge-home {
+  background: #2f9e5b;
+}
+
+.badge-both {
+  background: #8a5cf5;
+}
+
+.badge-day {
+  background: var(--text-muted);
+}
+
+.badge-inactive {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+.empty-state {
+  color: var(--text-muted);
+  text-align: center;
+  padding: 24px 0;
+}
+
+/* --- 폼 --- */
+
+.form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-row .form-field {
+  flex: 1;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-field label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  font-size: 0.9rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.url-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.url-row input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.85rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.checkbox-label {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+/* --- 계획(Plan) 목록 --- */
+
+.plan-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.plan-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.plan-card-main {
+  min-width: 0;
+}
+
+/* --- 계획 폼: 종목 구성 --- */
+
+.picker-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.picker-row select {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.empty-state-small {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 4px 0 8px;
+}
+
+.plan-exercise-row {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.plan-exercise-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.plan-exercise-targets {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.plan-exercise-targets input {
+  width: 48px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.85rem;
+}
+
+.plan-exercise-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.plan-exercise-actions .btn-icon:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* --- 공통: 블록 버튼 / 서브타이틀 --- */
+
+.btn-block {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.8rem;
+}
+
+.section-subtitle {
+  font-size: 0.95rem;
+  margin: 16px 0 8px;
+}
+
+/* --- 운동 기록 목록 --- */
+
+.session-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.session-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* --- 운동 실행 화면 --- */
+
+.workout-group {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.workout-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.set-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.set-row:first-of-type {
+  border-top: none;
+}
+
+.set-row.completed {
+  background: rgba(47, 158, 91, 0.08);
+  border-radius: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.set-number {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  min-width: 28px;
+}
+
+.set-fields {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.set-fields input {
+  width: 56px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.set-check {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.rest-timer {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(64px + env(safe-area-inset-bottom, 0));
+  background: var(--accent);
+  color: #fff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  max-width: 608px;
+  margin: 0 auto;
+  z-index: 20;
+}
+
+.rest-timer button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* --- 홈 대시보드: 이번 주 통계 --- */
+
+.stat-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stat-tile {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* --- 통계: 차트 --- */
+
+.viz-root {
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .viz-root {
+    --series-1: #3987e5;
+    --series-2: #d95926;
+  }
+}
+
+:root[data-theme='dark'] .viz-root {
+  --series-1: #3987e5;
+  --series-2: #d95926;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 4px;
+  margin-bottom: 14px;
+  overflow-x: auto;
+}
+
+.chart-card-narrow {
+  max-width: 260px;
+}
+
+.chart-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.chart-scroll {
+  overflow-x: auto;
+}
+
+.chart-svg-line {
+  height: 170px;
+  width: auto;
+  max-width: none;
+}
+
+.chart-value-label {
+  font-size: 9px;
+  fill: var(--text);
+  font-weight: 600;
+}
+
+.chart-axis-label {
+  font-size: 8px;
+  fill: var(--text-muted);
+}
+
+.chart-point {
+  cursor: pointer;
+}
+
+.chart-point:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.chart-tooltip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  color: var(--text);
+  display: inline-block;
+  margin-top: 4px;
+}
